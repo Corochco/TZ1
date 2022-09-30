@@ -5,7 +5,7 @@ import sys
 def show_contacts(file_name):
     array = []
     try:
-        with open(file_name, 'r') as f:
+        with open(file_name, 'r', encoding="utf8") as f:
             line = f.readline()
             while line != '':
                 line1 = ' '.join(line[:line.find(',')].split())
@@ -51,9 +51,8 @@ def show_contacts(file_name):
                 line = f.readline()
             return array
     except FileNotFoundError:
-        print('Вы все испортили!!!!!!')
-        time.sleep(1.5)
-        sys.exit()
+        print('Неверное имя файла, попробуйте снова')
+        return [0]
 
 def find_by_phone_number(contacts_array):
     command = ' '.join(input().split())
@@ -126,33 +125,38 @@ def find_by_middle_name(contacts_array):
     return array
 
 def find_by_surname_and_name(contacts_array):
-    surname, name = map(str, input().split())
-    array = []
-    for i in contacts_array:
-        if str(i.get_surname()) == str(surname) and str(i.get_name()) == str(name):
-            array.append(i)
-    if len(array) == 0:
-        print('Извините, но по вашему запросу контактов не найдено')
-        return 0
-    print('Было найдено', len(array), 'совпадений:')
-    for i in range(len(array)):
-        print(i + 1, ': ', array[i].pyout(), sep='')
-    return array
+    try:
+        surname, name = map(str, input().split())
+        array = []
+        for i in contacts_array:
+            if str(i.get_surname()) == str(surname) and str(i.get_name()) == str(name):
+                array.append(i)
+        if len(array) == 0:
+            print('Извините, но по вашему запросу контактов не найдено')
+            return 0
+        print('Было найдено', len(array), 'совпадений:')
+        for i in range(len(array)):
+            print(i + 1, ': ', array[i].pyout(), sep='')
+        return array
+    except ValueError:
+        print('Вы ввели не то')    
 
 def find_by_all(contacts_array):
-    surname, name, middle_name = map(str, input().split())
-    array = []
-    for i in contacts_array:
-        if str(i.get_surname()) == str(surname) and str(i.get_name()) == str(name)and str(i.get_middle_name()) == str(middle_name):
-            array.append(i)
-    if len(array) == 0:
-        print('Извините, но по вашему запросу контактов не найдено')
-        return 0
-    print('Было найдено', len(array), 'совпадений:')
-    for i in range(len(array)):
-        print(i + 1, ': ', array[i].pyout(), sep='')
-    return array
-
+    try:
+        surname, name, middle_name = map(str, input().split())
+        array = []
+        for i in contacts_array:
+            if str(i.get_surname()) == str(surname) and str(i.get_name()) == str(name)and str(i.get_middle_name()) == str(middle_name):
+                array.append(i)
+        if len(array) == 0:
+            print('Извините, но по вашему запросу контактов не найдено')
+            return 0
+        print('Было найдено', len(array), 'совпадений:')
+        for i in range(len(array)):
+            print(i + 1, ': ', array[i].pyout(), sep='')
+        return array
+    except ValueError:
+        print('Вы ввели не то')
 def find_empty_phone_number(contacts_array):
     array = []
     for i in contacts_array:
@@ -186,7 +190,7 @@ def find_empty_email_and_phone_number(contacts_array):
     for i in range(len(array)):
         print(i + 1, ': ', array[i].pyout(), sep='')
 
-def re_write(contacts_array):
-    with open('contacts.txt', 'w') as f:
+def re_write(contacts_array, file_name):
+    with open(file, 'w', encoding="utf8") as f:
         for i in contacts_array:
             f.write(i.get_surname() + ' ' + i.get_name() + ' ' + i.get_middle_name() + ', ' + i.get_phone_number() + ', ' + i.get_email() + '\n')
